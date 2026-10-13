@@ -109,7 +109,14 @@ jobs:
       # managed explicitly above so opam never pulls a conflicting
       # distro libxgboost underneath us.
       - name: Install OCaml deps
-        run: opam install . --deps-only --with-test --no-depexts --yes
+        run: opam install ./xgboost.opam --deps-only --with-test --no-depexts --yes
+
+      - name: Force vendored discovery
+        if: matrix.mode == 'vendored'
+        run: |
+          mkdir -p "$RUNNER_TEMP/empty-pkgconfig"
+          echo 'PKG_CONFIG_PATH=' >> "$GITHUB_ENV"
+          echo "PKG_CONFIG_LIBDIR=$RUNNER_TEMP/empty-pkgconfig" >> "$GITHUB_ENV"
 
       - name: Force vendored discovery
         if: matrix.mode == 'vendored'
