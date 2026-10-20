@@ -18,10 +18,9 @@ jobs:
         #   vendored — no system lib; compile vendor/xgboost with CMake
         #              (the opam-repo-ci sandbox scenario)
         mode: [system, vendored]
-        # The vendored path is compiler-version-independent, so build it
-        # once (on the newest OCaml) to keep CI lean.
+        # Check installed vendored linking on the oldest supported and
+        # newest compiler, including $CAMLORIGIN expansion on OCaml 5.1.
         exclude:
-          - { ocaml-version: "5.1", mode: vendored }
           - { ocaml-version: "5.2", mode: vendored }
           - { ocaml-version: "5.3", mode: vendored }
         include:

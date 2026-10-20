@@ -105,11 +105,13 @@ cat > "$scratch/consumer/dune-project" <<'DUNE_PROJECT'
 (name installed_xgboost_probe)
 DUNE_PROJECT
 cat > "$scratch/consumer/dune" <<'DUNE_FILE'
-(executable (name probe) (modes exe byte_complete) (libraries xgboost))
+(executable (name probe) (modes exe byte byte_complete) (libraries xgboost))
 DUNE_FILE
 opam exec -- dune build --root "$scratch/consumer" --profile release \
-  probe.exe probe.bc.exe
+  probe.exe probe.bc probe.bc.exe
 "$scratch/consumer/_build/default/probe.exe"
+opam exec -- ocamlrun -I "$scratch/relocated-install/lib/stublibs" \
+  "$scratch/consumer/_build/default/probe.bc"
 "$scratch/consumer/_build/default/probe.bc.exe"
 if [[ "$mode" == vendored ]]; then
   for executable in probe.exe probe.bc.exe; do

@@ -15,7 +15,7 @@
      sources are committed — so it also covers the opam-repo-ci sandbox
      and distros without a package (Fedora, Arch, ...).
 
-   Outputs (all four are declared targets of the rule in config/dune):
+   Outputs (declared targets of the rule in config/dune):
    - c_flags.sexp / c_library_flags.sexp — the C compile/link flags,
      consumed by the ctypes stanza in src/bindings/dune via
      [(:include ...)].
@@ -163,6 +163,9 @@ let vendored_conf c =
     [ "-I"; Filename.concat src "include";
       "-I"; Filename.concat src "dmlc-core/include" ]
   in
+  (* ctypes also uses these flags to link its in-tree shared stubs, which
+     need -Lsrc/bindings. That relative path remains in installed metadata;
+     installed consumers resolve the archives through $CAMLORIGIN. *)
   let libs =
     [ "-Lsrc/bindings"; "-lxgboost_vendored"; "-ldmlc_vendored" ]
     @ cxx_omp_libs c @ [ "-lm"; "-lpthread"; "-ldl" ]
